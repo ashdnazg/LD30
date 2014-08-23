@@ -7,34 +7,56 @@ setmetatable(Entity, {
   end,
 })
 
-function Entity.new(spritesheet_path, sprite_w, sprite_h)
+function Entity.new(spritesheet_path, sprite_w, sprite_h, vmax)
     local sprites = love.graphics.newImage(spritesheet_path)
     local quads = {}
     local width, height = sprites:getWidth(), sprites:getHeight()
     
     
-    for i = 1, width / G.tile_size do
-        for j = 1, height / G.tile_size do
-            table.insert(quads, love.graphics.newQuad((i - 1) * G.tile_size,  (j - 1) * G.tile_size, sprite_w, sprite_h, width, height))
+    for i = 1, width / sprite_w do
+        for j = 1, height / sprite_h do
+            table.insert(quads, love.graphics.newQuad((i - 1) * sprite_w,  (j - 1) * sprite_h, sprite_w, sprite_h, width, height))
         end
     end
     
     local e = {x = 0,
                y = 0,
-               vx = 0,
-               vy = 0,
+               vx = 50,
+               vy = 50,
                ax = 0,
                ay = 0,
+               ["vmax"] = vmax,
                ["sprites"] = sprites,
                quad = 1,
-               ["quads"] = quads}
+               ["quads"] = quads,
+               w = sprite_w,
+               h = sprite_h,
+               opacity = 255,
+               flip = false}
     setmetatable(e, Entity)
     return e
 end
 
 function Entity:draw()
-   love.graphics.draw(self.sprites, self.quads[self.quad], self.x,  self.y) 
+    love.graphics.setColor( 255,255,255, self.opacity)
+    love.graphics.draw(self.sprites, self.quads[self.quad], math.floor(self.x),  math.floor(self.y), 0, self.flip and -1 or 1, 1, self.w / 2, self.h / 2)
+    love.graphics.setColor( 255,255,255, 255)
 end
 
+function Entity:update(dt)
+    self.vx = self.vx + self.ax * dt
+    self.vy = self.vy + self.ay * dt
+    local v_squared = self.vx * self.vx + self.vy * self.vy
+    local vmax_squared = self.vmax * self.vmax
+    if  v_squared > vmax_squared then
+        local ratio = math.sqrt(vmax_squared/ v_squared)
+        self.vx = self.vx * ratio
+        self.vy = self.vy * ratio
+    end
+    
+    self.x = self.x + self.vx * dt
+    self.y = self.y + self.vy * dt
+    
+end
 
 return Entity

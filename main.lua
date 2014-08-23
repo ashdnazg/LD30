@@ -1,11 +1,12 @@
 local map = require "map"
 local boats = require "boats"
-
+local people = require "people"
+local flux = require "flux"
 
 function love.draw()
     map.draw()
+    people.draw()
     boats.draw()
-    love.graphics.print("Hello World", 320, 240)
 end
 
 function love.load()
@@ -14,5 +15,7 @@ function love.load()
 end
  
 function love.update(dt)
- 
+    flux.update(dt)
+    boats.update(dt)
+    people.update(dt)
 end

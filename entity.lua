@@ -1,3 +1,6 @@
+local lume = require "lume"
+
+
 local Entity = {}
 Entity.__index = Entity
 
@@ -21,8 +24,8 @@ function Entity.new(spritesheet_path, sprite_w, sprite_h, vmax)
     
     local e = {x = 0,
                y = 0,
-               vx = 50,
-               vy = 50,
+               vx = 0,
+               vy = 0,
                ax = 0,
                ay = 0,
                ["vmax"] = vmax,
@@ -38,8 +41,8 @@ function Entity.new(spritesheet_path, sprite_w, sprite_h, vmax)
 end
 
 function Entity:draw()
-    love.graphics.setColor( 255,255,255, self.opacity)
-    love.graphics.draw(self.sprites, self.quads[self.quad], math.floor(self.x),  math.floor(self.y), 0, self.flip and -1 or 1, 1, self.w / 2, self.h / 2)
+    love.graphics.setColor( self.opacity,self.opacity,self.opacity, self.opacity)
+    love.graphics.draw(self.sprites, self.quads[self.quad], lume.round(self.x),  lume.round(self.y), 0, self.flip and -1 or 1, 1, self.w / 2, self.h / 2)
     love.graphics.setColor( 255,255,255, 255)
 end
 

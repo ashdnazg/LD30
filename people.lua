@@ -11,6 +11,8 @@ local people_list = {}
 local ghost_list = {}
 local lowest_existing = 1
 
+local coin_sound
+
 function new_people(people_type)
     local p = {e = Entity(PEOPLE_TYPES[people_type][1], PEOPLE_TYPES[people_type][2], PEOPLE_TYPES[people_type][3], 1000),
                    year = 0, due = false, aboard = false, delivered = false}
@@ -49,6 +51,8 @@ end
 
 function people.load()
    people.add_people("roman", 30)
+   
+   coin_sound = love.audio.newSource("coins.ogg")
 end
 
 function people.draw()
@@ -87,6 +91,7 @@ function people.kill(p)
     flux.to(g.e, 1, { vy = -100})
                         :ease("quadin")
     G.money = G.money + 1
+    coin_sound:clone():play()
 end
 
 return people

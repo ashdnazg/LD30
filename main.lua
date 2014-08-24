@@ -3,7 +3,7 @@ local boats = require "boats"
 local people = require "people"
 local flux = require "flux"
 local menu = require "menu"
-local timer = require "timer"
+local timers = require "timers"
 
 local music
 
@@ -28,6 +28,7 @@ function love.load()
     music = love.audio.newSource("music.ogg")
     music:setLooping(true)
     music:play()
+    timers.load()
 end
  
 function love.update(dt)
@@ -36,6 +37,7 @@ function love.update(dt)
         flux.update(dt)
         boats.update(dt)
         people.update(dt)
+        timers.update(dt)
     end
     menu.update(dt)
 end

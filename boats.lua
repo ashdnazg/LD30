@@ -8,7 +8,7 @@ local people = require "people"
 local boats = {}
 
 local BOAT_TYPES = {
-        initial = {"initial.png", 48, 32, 50}
+        initial = {"initial.png", 48, 32, 150}
     }
 
 local boat_list = {}
@@ -24,10 +24,10 @@ end
 
 function boats.load()
     boats.add_boat("initial")
-    boats.add_boat("initial")
-    boats.add_boat("initial")
-    boats.add_boat("initial")
-    boats.add_boat("initial")
+    --boats.add_boat("initial")
+    --boats.add_boat("initial")
+    --boats.add_boat("initial")
+    --boats.add_boat("initial")
 end
 
 function boats.draw()
@@ -92,7 +92,7 @@ function boats.update(dt)
                             function()
                                 repeat
                                     boat.e.quad = (boat.e.quad % #boat.e.quads) + 1
-                                    coil.wait(0.2)
+                                    coil.wait(0.15)
                                 until nil
                             end)
                             

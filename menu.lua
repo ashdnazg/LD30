@@ -15,6 +15,7 @@ local bar_img
 local message_height
 local message_width
 local click_sound
+local headline
 
 function open_message()
     G.paused = true
@@ -69,6 +70,10 @@ function get_button_img(button)
     end
 end
 
+function menu.set_headline(text)
+    headline = text
+end
+
 function menu.draw()
     for i = 1, menu_length do
         local button = buttons[i]
@@ -90,8 +95,11 @@ function menu.draw()
     love.graphics.print("Gold: " .. G.money, 4, -G.bar_height + 4, 0, 1, 1)
     local year_str = G.year .. ((G.year >= 0) and " AD" or " BC")
     love.graphics.printf("Year: " .. year_str,4, -G.bar_height + 4, G.width - 8, "right")
-    love.graphics.setColor( 255,255,255, 255)
     love.graphics.setNewFont(12)
+    if headline then
+        love.graphics.printf("Breaking News: " .. headline, 150, -G.bar_height + 2, G.width - 350, "center")
+    end
+    love.graphics.setColor( 255,255,255, 255)
 end
 
 function has_message()

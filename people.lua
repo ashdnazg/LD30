@@ -1,10 +1,12 @@
 local Entity = require "Entity"
 local flux = require "flux"
+local lume = require "lume"
 local people = {}
 
 local PEOPLE_TYPES = {
-        roman = {"roman.png", 24, 32},
-        ghost = {"ghost.png", 24, 32}
+        roman = {1, 24, 32},
+        centurion = {4, 24, 32},
+        ghost = {1, 24, 32}
     }
 
 local people_list = {}
@@ -14,16 +16,18 @@ local lowest_existing = 1
 local coin_sound
 
 function new_people(people_type)
-    local p = {e = Entity(PEOPLE_TYPES[people_type][1], PEOPLE_TYPES[people_type][2], PEOPLE_TYPES[people_type][3], 1000),
+    local img_name = people_type .. (math.floor(lume.random(PEOPLE_TYPES[people_type][1])) + 1) .. ".png"
+    local p = {e = Entity(img_name, PEOPLE_TYPES[people_type][2], PEOPLE_TYPES[people_type][3], 1000),
                    year = 0, due = false, aboard = false, delivered = false}
     return p
 end
 
 function people.add_people(people_type, num)
+    local base_y = math.random(G.tile_size, G.height - G.tile_size)
     for i = 1, num do 
         local p = new_people(people_type)
         p.e.x = math.random(G.width - G.land_width * G.tile_size, G.width - G.tile_size)
-        p.e.y = math.random(G.tile_size, G.height - G.tile_size)
+        p.e.y = base_y + math.random(-G.tile_size, G.tile_size)
         p.e.opacity = 0
         flux.to(p.e, 0.3, { opacity = 255})
                         :ease("quadin"):delay(math.random(1,6) / 10)
@@ -50,7 +54,7 @@ function people.get_next()
 end
 
 function people.load()
-   people.add_people("roman", 30)
+   --people.add_people("roman", 30)
    
    coin_sound = love.audio.newSource("coins.ogg")
 end
@@ -90,7 +94,7 @@ function people.kill(p)
     g.e.opacity = 180
     flux.to(g.e, 1, { vy = -100})
                         :ease("quadin")
-    G.money = G.money + 1
+    G.money = G.money + G.money_increment
     coin_sound:clone():play()
 end
 

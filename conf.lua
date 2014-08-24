@@ -17,7 +17,7 @@ function love.conf(t)
 
   G = {}
   G.tile_size = 32
-  G.land_width = 7
+  G.land_width = 3
   G.debug = true
   
   G.paused = false
@@ -28,8 +28,9 @@ function love.conf(t)
   G.height_tiles = G.height / G.tile_size
   G.bar_height = BAR_HEIGHT
   G.menu_height = MENU_HEIGHT
-  G.boat_prices = { initial = 1 }
+  G.boat_prices = { initial = 5 }
+  G.money_increment = 2
   
-  G.year = 5
+  G.year = -300
   G.money = 0
 end

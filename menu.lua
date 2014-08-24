@@ -19,6 +19,7 @@ local click_sound
 
 local headline
 local news_sound
+local message_sound
 
 function open_message()
     G.paused = true
@@ -92,6 +93,7 @@ end
 
 function menu.set_message(msg)
     message = msg
+    message_sound:play()
 end
 
 function menu.draw()
@@ -163,7 +165,7 @@ function menu.load()
     
     click_sound = love.audio.newSource("click.ogg")
     news_sound = love.audio.newSource("news.ogg")
-    
+    message_sound = love.audio.newSource("message.ogg")
     
     message = messages.intro()
     message_open = true
@@ -219,6 +221,7 @@ function menu.update(dt)
 end
 
 function menu.mousepressed(x, y, button)
+    
 end
 
 

@@ -4,6 +4,7 @@ local people = require "people"
 local menu = require "menu"
 local lume = require "lume"
 local messages = require "messages"
+local boats = require "boats"
 
 local timers = {}
 local threads
@@ -50,7 +51,12 @@ function tick()
         if G.year == G.start_year + G.num_years then
             G.quit = true
         end
-        coil.wait(0.05)
+        if G.demon_risk then 
+            if lume.random(20 - G.number_of_boats) < 1 then
+                boats.create_trident()
+            end
+        end
+        coil.wait(1)
     until nil
 end
 

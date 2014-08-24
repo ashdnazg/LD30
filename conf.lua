@@ -18,7 +18,7 @@ function love.conf(t)
   G = {}
   G.tile_size = 32
   G.land_width = 3
-  --G.debug = true
+  G.debug = false
   
   G.paused = false
   G.debug_str = "None"

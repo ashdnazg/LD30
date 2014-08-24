@@ -37,13 +37,13 @@ end
 function close_message()
     G.paused = false
     message_open = false
-    message = nil
 end
 
 function accept_message()
     if message.accept_fn then
        message.accept_fn() 
     end
+    message = nil
     close_message()
 end
 
@@ -93,6 +93,7 @@ end
 
 function menu.set_message(msg)
     message = msg
+    open_message()
     message_sound:play()
 end
 
@@ -133,6 +134,9 @@ function menu.load()
     buttons = { {name = "initialbtn", 
                  state_fn = lume.lambda"-> G.money >= G.boat_prices.initial",
                  click_fn = lume.fn(buy_boat, "initial")},
+                 {name = "whalebtn", 
+                 state_fn = lume.lambda"-> G.money >= G.boat_prices.whale",
+                 click_fn = lume.fn(buy_boat, "whale")},
                 {name = "messagebtn", 
                  state_fn = has_message,
                  click_fn = open_message},

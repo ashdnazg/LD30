@@ -11,7 +11,7 @@ local PEOPLE_TYPES = {
 
 local people_list
 local ghost_list
-local lowest_existing = 1
+local lowest_existing
 
 local coin_sound
 
@@ -58,6 +58,7 @@ function people.load()
    people_list = {}
    ghost_list = {}
    coin_sound = love.audio.newSource("coins.ogg")
+   lowest_existing = 1
 end
 
 function people.draw()

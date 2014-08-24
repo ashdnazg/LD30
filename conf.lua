@@ -28,11 +28,12 @@ function love.conf(t)
   G.height_tiles = G.height / G.tile_size
   G.bar_height = BAR_HEIGHT
   G.menu_height = MENU_HEIGHT
-  G.boat_prices = { initial = 5 }
+  G.boat_prices = { initial = 5, whale = 15}
   G.money_increment = 2
   G.start_year = -300
   G.num_years = 200
   G.insurance_length = 50
   G.demon_length = 20
-  
+  G.message_chance = 50
+  G.timer_delay = 1
 end

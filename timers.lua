@@ -10,11 +10,17 @@ local timers = {}
 local threads
 
 function get_message()
-    if (not G.insurance or G.insurance < 0) and lume.random(30) < 1 then
+    if (not G.insurance or G.insurance < 0) and lume.random(G.message_chance) < 1 then
         return messages.insurance()
     end
-    if (not G.demon_risk or G.demon_risk < 0) and lume.random(30) < 1 then
+    if (not G.demon_risk or G.demon_risk < 0) and lume.random(G.message_chance) < 1 then
         return messages.protection()
+    end
+    if (G.number_of_boats > 2 and lume.random(G.message_chance) < 1) then
+        return messages.storm()
+    end
+    if (G.number_of_boats < 5 and lume.random(G.message_chance) < 1) then
+        return messages.uncle()
     end
     return nil
 end
@@ -56,7 +62,7 @@ function tick()
                 boats.create_trident()
             end
         end
-        coil.wait(1)
+        coil.wait(G.timer_delay)
     until nil
 end
 

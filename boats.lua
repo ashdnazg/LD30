@@ -14,7 +14,8 @@ local laugh_sound
 local hit_sound
 
 local BOAT_TYPES = {
-        initial = {"initial.png", 48, 32, 150, 1}
+        initial = {"initial.png", 48, 32, 150, 1},
+        whale = {"whale.png", 64, 32, 200, 3}
     }
 
 function boats.create_trident()
@@ -29,6 +30,15 @@ function boats.create_trident()
     t.e.ay = 300
     table.insert(tridents, t)
     laugh_sound:clone():play()
+end
+
+function boats.storm()
+    local id = math.ceil(lume.random(#boat_list))
+    local boat = boat_list[id]
+    if not boat or boat.dying or boat.dead then
+        return
+    end
+    boats.remove_boat(id)
 end
 
 function update_trident(trident, dt)

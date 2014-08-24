@@ -2,9 +2,11 @@ local map = {}
 local tile_set
 local tile_quads
 local quad_index = {["G"] = 1,
-                    ["L"] = 2, 
-                    ["W"] = 3,
-                    ["R"] = 4 }
+                    ["L"] = 2,
+                    ["H"] = 3,
+                    ["W"] = 4,
+                    ["R"] = 5,
+                    ["HL"] = 6}
 
 local tile_map
 
@@ -37,10 +39,12 @@ function map.load()
         local tile_col = {}
         for j = 1, G.height_tiles do
             local quad_type = "G"
-            if i <= G.land_width or i > G.width_tiles - G.land_width then
+            if i <= G.land_width then
+                quad_type = "H"
+            elseif i > G.width_tiles - G.land_width then
                 quad_type = "G"
             elseif i == G.land_width + 1 then
-                quad_type = "L"
+                quad_type = "HL"
             elseif i == G.width_tiles - G.land_width then
                 quad_type = "R"
             else

@@ -22,7 +22,7 @@ end
 function love.load()
     math.randomseed(os.time()) 
     G.year = G.start_year
-    G.money = 0
+    G.money = 200
     G.number_of_boats = 0
     G.people_saved = 0
     G.people_lost = 0

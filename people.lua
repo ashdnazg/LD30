@@ -86,7 +86,7 @@ function people.kill(p)
     g.e.opacity = 180
     flux.to(g.e, 1, { vy = -100})
                         :ease("quadin")
-    
+    G.money = G.money + 1
 end
 
 return people

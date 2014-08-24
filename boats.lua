@@ -13,7 +13,6 @@ local BOAT_TYPES = {
 
 local boat_list = {}
 
-
 function boats.add_boat(boat_type)
     
     local b = {e = Entity(BOAT_TYPES[boat_type][1], BOAT_TYPES[boat_type][2], BOAT_TYPES[boat_type][3], BOAT_TYPES[boat_type][4]),
@@ -127,9 +126,6 @@ function boats.update(dt)
         end
         boat.e:update(dt)
         boat.threads:update(dt)
-        if boat.target then
-            G.debug_str = "" .. boat.target[1] .. " " .. boat.target[2]
-        end
     end
 end
 

@@ -3,10 +3,20 @@ local history = require "history"
 local people = require "people"
 local menu = require "menu"
 local lume = require "lume"
+local messages = require "messages"
 
 local timers = {}
 local threads
 
+function get_message()
+    if (not G.insurance or G.insurance < 0) and lume.random(30) < 1 then
+        return messages.insurance()
+    end
+    if (not G.demon_risk or G.demon_risk < 0) and lume.random(30) < 1 then
+        return messages.protection()
+    end
+    return nil
+end
 
 function tick()
     repeat
@@ -20,7 +30,27 @@ function tick()
         if event.headline then
             menu.set_headline(event.headline)
         end
-        coil.wait(1)
+        if G.insurance then
+            G.insurance = G.insurance - 1
+            if G.insurance < 0 then
+                G.insurance = false
+            end
+        end
+        if G.demon_risk then
+            G.demon_risk = G.demon_risk - 1
+            if G.demon_risk < 0 then
+                G.demon_risk = false
+            end
+        end
+
+        local message = get_message()
+        if message then
+            menu.set_message(message)
+        end
+        if G.year == G.start_year + G.num_years then
+            G.quit = true
+        end
+        coil.wait(0.05)
     until nil
 end
 

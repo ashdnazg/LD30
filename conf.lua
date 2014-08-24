@@ -18,7 +18,7 @@ function love.conf(t)
   G = {}
   G.tile_size = 32
   G.land_width = 3
-  G.debug = true
+  --G.debug = true
   
   G.paused = false
   G.debug_str = "None"
@@ -30,7 +30,9 @@ function love.conf(t)
   G.menu_height = MENU_HEIGHT
   G.boat_prices = { initial = 5 }
   G.money_increment = 2
+  G.start_year = -300
+  G.num_years = 200
+  G.insurance_length = 50
+  G.demon_length = 20
   
-  G.year = -300
-  G.money = 0
 end

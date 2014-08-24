@@ -9,8 +9,8 @@ local PEOPLE_TYPES = {
         ghost = {1, 24, 32}
     }
 
-local people_list = {}
-local ghost_list = {}
+local people_list
+local ghost_list
 local lowest_existing = 1
 
 local coin_sound
@@ -55,7 +55,8 @@ end
 
 function people.load()
    --people.add_people("roman", 30)
-   
+   people_list = {}
+   ghost_list = {}
    coin_sound = love.audio.newSource("coins.ogg")
 end
 
@@ -83,6 +84,11 @@ function people.update(dt)
     end
 end
 
+function people.remove_person(p)
+    p.e.opacity = 0
+    p.delivered = true
+    G.people_lost = G.people_lost + 1
+end
 
 function people.kill(p)
     flux.to(p.e, 2, { opacity = 0})
@@ -96,6 +102,7 @@ function people.kill(p)
                         :ease("quadin")
     G.money = G.money + G.money_increment
     coin_sound:clone():play()
+    G.people_saved = G.people_saved + 1
 end
 
 return people

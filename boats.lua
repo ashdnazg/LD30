@@ -7,27 +7,45 @@ local people = require "people"
 
 local boats = {}
 
+local boat_list
+
 local BOAT_TYPES = {
-        initial = {"initial.png", 48, 32, 150}
+        initial = {"initial.png", 48, 32, 150, 1}
     }
 
-local boat_list = {}
 
 function boats.add_boat(boat_type)
     
     local b = {e = Entity(BOAT_TYPES[boat_type][1], BOAT_TYPES[boat_type][2], BOAT_TYPES[boat_type][3], BOAT_TYPES[boat_type][4]),
-               threads = coil.group()}
+               threads = coil.group(), cost = G.boat_prices[boat_type], capacity = BOAT_TYPES[boat_type][5], passengers = {}}
     b.e.x = lume.random(G.width / 2 - b.e.w, G.width / 2 + b.e.w)
     b.e.y = lume.random(G.height / 2 - b.e.w, G.height / 2 + b.e.w)
     table.insert(boat_list, b)
+    G.number_of_boats = G.number_of_boats + 1
 end
 
+function boats.remove_boat(id)
+    if not boat_list[id] then return end
+    
+    if G.insurance then
+        G.money = G.money + boat_list[id].cost
+    end
+    G.number_of_boats = G.number_of_boats - 1
+    if boat_list[id].p_target then
+        boat_list[id].p_target.due = false
+    end
+    if boat_list[id].passengers then
+        for _, person in pairs(boat_list[id].passengers) do
+            people.remove_person(person)
+        end
+    end
+    table.remove(boat_list, id)
+end
+
+
 function boats.load()
+    boat_list = {}
     boats.add_boat("initial")
-    --boats.add_boat("initial")
-    --boats.add_boat("initial")
-    --boats.add_boat("initial")
-    --boats.add_boat("initial")
 end
 
 function boats.draw()
@@ -49,7 +67,7 @@ function boats.update(dt)
                 boat.stopping = false
                 boat.e.quad = 1
                 if boat.p_target then
-                    boat.passengers = {boat.p_target}
+                    table.insert(boat.passengers, boat.p_target)
                     boat.p_target.due = false
                     boat.p_target.delivered = true
                     boat.p_target = nil
@@ -60,7 +78,7 @@ function boats.update(dt)
                             passenger.e.y = lume.random(passenger.e.y - 5, passenger.e.y + 5)
                             people.kill(passenger)
                         end
-                        boat.passengers = nil
+                        boat.passengers = {}
                     end
                 end
                 if boat.anim then
@@ -69,12 +87,12 @@ function boats.update(dt)
             end
             if not boat.stopping then
                 local ratio, sign , temp_vx
-                if boat.passengers then
+                local p_target = people.get_next()
+                if #boat.passengers == boat.capacity or (not p_target and #boat.passengers > 0) then
                     boat.target = {G.land_width * G.tile_size + boat.e.w, boat.e.y}
                     sign = -1
                     temp_vx = - boat.e.vmax
                 else
-                    local p_target = people.get_next()
                     if p_target then
                         boat.p_target = p_target
                         p_target.due = true
@@ -119,9 +137,11 @@ function boats.update(dt)
             end
         end
         if boat.passengers then
+            local offset = 0
             for _, passenger in pairs (boat.passengers) do
-                passenger.e.x = boat.e.x + passenger.e.w / 2
+                passenger.e.x = boat.e.x + passenger.e.w / 2 - offset
                 passenger.e.y = boat.e.y - passenger.e.h / 2
+                offset = offset + 12
             end
         end
         boat.e:update(dt)

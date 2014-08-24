@@ -1,13 +1,14 @@
 local flux = require "flux"
 local lume = require "lume"
 local boats = require "boats"
+local messages = require "messages"
 
 local menu = {}
 local buttons
 local menu_length
 local button_size
-local tweens = flux.group()
-local message = true
+local tweens
+local message
 local message_open
 local message_img
 local bar_img
@@ -15,7 +16,9 @@ local bar_img
 local message_height
 local message_width
 local click_sound
+
 local headline
+local news_sound
 
 function open_message()
     G.paused = true
@@ -23,28 +26,40 @@ function open_message()
 end
 
 function can_accept_message()
-    return true
+    return message and (not message.can_accept_fn or message.can_accept_fn())
 end
 
 function can_decline_message()
-    return true
+    return message and (not message.can_decline_fn or message.can_decline_fn())
 end
 
 function close_message()
     G.paused = false
     message_open = false
+    message = nil
 end
 
 function accept_message()
+    if message.accept_fn then
+       message.accept_fn() 
+    end
     close_message()
 end
 
 function decline_message()
+    if message.decline_fn then
+       message.decline_fn() 
+    end
     close_message()
 end
 
 function draw_message()
     love.graphics.draw(message_img, G.width / 2,  G.height / 2, 0, 1, 1, message_width / 2, message_height / 2)
+    love.graphics.setColor(0,0,0)
+    love.graphics.setNewFont(12)
+    love.graphics.printf(message.text, 104, 108, 438, "left")
+    love.graphics.setNewFont(12)
+    love.graphics.setColor( 255,255,255, 255)
     local vimg, ximg
     vimg = get_button_img(buttons.v)
     ximg = get_button_img(buttons.x)
@@ -72,6 +87,11 @@ end
 
 function menu.set_headline(text)
     headline = text
+    news_sound:play()
+end
+
+function menu.set_message(msg)
+    message = msg
 end
 
 function menu.draw()
@@ -93,11 +113,11 @@ function menu.draw()
     love.graphics.setColor(0,0,0)
     love.graphics.setNewFont(24)
     love.graphics.print("Gold: " .. G.money, 4, -G.bar_height + 4, 0, 1, 1)
-    local year_str = G.year .. ((G.year >= 0) and " AD" or " BC")
+    local year_str = math.abs(G.year) .. ((G.year >= 0) and " AD" or " BC")
     love.graphics.printf("Year: " .. year_str,4, -G.bar_height + 4, G.width - 8, "right")
     love.graphics.setNewFont(12)
     if headline then
-        love.graphics.printf("Breaking News: " .. headline, 150, -G.bar_height + 2, G.width - 350, "center")
+        love.graphics.printf("Breaking News: " .. headline, 126, -G.bar_height + 2, 333, "center")
     end
     love.graphics.setColor( 255,255,255, 255)
 end
@@ -107,6 +127,7 @@ function has_message()
 end
 
 function menu.load()
+    tweens = flux.group()
     buttons = { {name = "initialbtn", 
                  state_fn = lume.lambda"-> G.money >= G.boat_prices.initial",
                  click_fn = lume.fn(buy_boat, "initial")},
@@ -141,10 +162,15 @@ function menu.load()
     
     
     click_sound = love.audio.newSource("click.ogg")
+    news_sound = love.audio.newSource("news.ogg")
+    
+    
+    message = messages.intro()
+    message_open = true
+    G.paused = true
 end
 
 function menu.update(dt)
-    G.debug_str = G.debug_str .. " Money: " .. G.money
     for id, button in pairs(buttons) do
         button.pressed = false
         if button.state_fn then
@@ -183,7 +209,11 @@ function menu.update(dt)
             end
         end
     end
-    
+    if G.quit then
+        message = messages.quit()
+        message_open = true
+        G.paused = true
+    end
     
     tweens:update(dt)
 end

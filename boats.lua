@@ -15,7 +15,8 @@ local hit_sound
 
 local BOAT_TYPES = {
         initial = {"initial.png", 48, 32, 150, 1},
-        whale = {"whale.png", 64, 32, 200, 3}
+        whale = {"whale.png", 64, 32, 200, 3},
+        titanic = {"titanic.png", 192, 64, 50, 10}
     }
 
 function boats.create_trident()
@@ -138,7 +139,7 @@ function update_boat(boat, dt)
             local ratio, sign , temp_vx
             local p_target = people.get_next()
             if #boat.passengers == boat.capacity or (not p_target and #boat.passengers > 0) then
-                boat.target = {G.land_width * G.tile_size + boat.e.w, boat.e.y}
+                boat.target = {(G.land_width + 1) * G.tile_size + boat.e.w / 2, boat.e.y}
                 sign = -1
                 temp_vx = - boat.e.vmax
             else
@@ -146,7 +147,7 @@ function update_boat(boat, dt)
                     boat.p_target = p_target
                     p_target.due = true
                     p_target.incoming_boat = boat
-                    boat.target = {G.width - G.land_width * G.tile_size - boat.e.w, p_target.e.y}
+                    boat.target = {G.width - (G.land_width + 1) * G.tile_size - boat.e.w / 2, p_target.e.y}
                     ratio = (boat.target[1] - boat.e.x) / (boat.target[2] - boat.e.y)
                     sign = (boat.target[1] - boat.e.x) > 0 and 1 or -1
                     temp_vx = math.sqrt(boat.e.vmax * boat.e.vmax * (1 + ratio * ratio)) * sign

@@ -102,7 +102,7 @@ function people.kill(p)
     flux.to(g.e, 1, { vy = -100})
                         :ease("quadin")
     G.money = G.money + G.money_increment
-    coin_sound:clone():play()
+    coin_sound:play()
     G.people_saved = G.people_saved + 1
 end
 

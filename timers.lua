@@ -22,6 +22,9 @@ function get_message()
     if (G.number_of_boats < 5 and lume.random(G.message_chance) < 1) then
         return messages.uncle()
     end
+    if (G.number_of_boats > 5 and lume.random(G.message_chance) < 1) then
+        return messages.permit()
+    end
     return nil
 end
 

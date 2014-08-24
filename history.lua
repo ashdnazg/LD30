@@ -13,7 +13,7 @@ local history = { [-280] = {headline = "The Romans drive the Greeks from Italy i
                   [-113] = {headline = "Germanic tribes wreak havoc until being destroyed by Gaius Marius in the Cimbrian War",
                           spawns = {centurion = 15}},
                   default = {spawns = {roman = 1},
-                             chance = 2}
+                             chance = 1}
                  }
                  
 return history

@@ -1,4 +1,4 @@
-local Entity = require "Entity"
+local Entity = require "entity"
 local flux = require "flux"
 local lume = require "lume"
 local people = {}

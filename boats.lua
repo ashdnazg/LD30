@@ -1,4 +1,4 @@
-local Entity = require "Entity"
+local Entity = require "entity"
 local coil = require "coil"
 local lume = require "lume"
 local flux = require "flux"
@@ -16,7 +16,7 @@ local hit_sound
 local BOAT_TYPES = {
         initial = {"initial.png", 48, 32, 150, 1},
         whale = {"whale.png", 64, 32, 200, 3},
-        titanic = {"titanic.png", 192, 64, 50, 10}
+        titanic = {"titanic.png", 192, 64, 80, 10}
     }
 
 function boats.create_trident()
@@ -173,17 +173,8 @@ function update_boat(boat, dt)
         end
     else
         local dist_sq = (boat.target[1] - boat.e.x) * (boat.target[1] - boat.e.x) + (boat.target[2] - boat.e.y) * (boat.target[2] - boat.e.y)
-        if dist_sq < boat.e.vmax / 2 then
-            boat.target = nil
-            -- if boat.p_target then
-                -- if boat.passengers then
-                    -- boat.p_target = nil
-                    -- boat.passengers = nil
-                -- else
-                    -- boat.p_target.due = false
-                    -- boat.p_target.delivered = true
-                -- end
-            -- end
+        if dist_sq < boat.e.vmax then
+            boat.target = nil -- arrived
         end
     end
     if boat.passengers then

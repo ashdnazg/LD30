@@ -21,22 +21,29 @@ function generate_protection()
     return {text = "A group of viciously looking demons arrived, claiming \"Styx can be a bery dangerous place\" and offering to guard your safety for a mere ".. gold .. " gold.",
             can_accept_fn = lume.lambda ("-> G.money >= " .. gold),
             accept_fn = function() G.money, G.demon_risk = G.money - gold, false end,
-            decline_fn = function() G.demon_risk =  G.demon_length end}
+            decline_fn = function() G.demon_risk = G.demon_risk or G.demon_length end}
 end
 
 function generate_insurance()
     local gold_each = math.ceil(lume.random(5))
     local total = G.number_of_boats * gold_each
+    G.insurance = false
     return {text = "A small man in a small suit had offered to insure your boats for " .. gold_each .. " gold each (total: " .. total ..").",
             can_accept_fn = lume.lambda ("-> G.money >= " .. total),
-            accept_fn = function() G.money, G.insurance = G.money - total, G.insurance_length end,
-            decline_fn = function() G.insurance = false end}
+            accept_fn = function() G.money, G.insurance = G.money - total, G.insurance_length end}
 end
 
 function generate_uncle()
     local num_boats = math.ceil(lume.random(3))
     return {text = "A rich uncle passed away and left you " .. num_boats .. " small boat" .. (num_boats > 1 and "s" or "") .. " in his will.",
             accept_fn = function() for i=1,num_boats do boats.add_boat("initial") end end,
+            can_decline_fn = lume.lambda("-> false"),}
+end
+
+function generate_permit()
+    local bribe = math.ceil(lume.random(10)) * 5
+    return {text = "A clerk from port authority has discovered you are operating a fleet without a valid permit. A genrous bribe made him forget that.",
+            accept_fn = function() G.money = math.max(G.money - bribe, 0) end,
             can_decline_fn = lume.lambda("-> false"),}
 end
 
@@ -56,7 +63,8 @@ local messages = { protection = generate_protection,
                    uncle = generate_uncle,
                    quit = generate_quit,
                    intro = generate_intro,
-                   storm = generate_storm
+                   storm = generate_storm,
+                   permit = generate_permit
                  }
                  
 return messages

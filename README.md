@@ -12,8 +12,3 @@ License
 =======
 You're free to use my code in any project you wish.
 Some of the files are by rxi, see LICENSE.rxi for their license.
-
-Thanks!
-=======
-Thanks for playing the game!
-Eshed Shaham (ashdnazg@gmail.com)

@@ -18,7 +18,7 @@ end
 
 function generate_protection()
     local gold = math.ceil(lume.random(10)) * 5
-    return {text = "A group of viciously looking demons arrived, claiming \"Styx can be a bery dangerous place\" and offering to guard your safety for a mere ".. gold .. " gold.",
+    return {text = "A group of viciously looking demons arrived, claiming \"Styx can be a very dangerous place\" and offering to guard your safety for a mere ".. gold .. " gold.",
             can_accept_fn = lume.lambda ("-> G.money >= " .. gold),
             accept_fn = function() G.money, G.demon_risk = G.money - gold, false end,
             decline_fn = function() G.demon_risk = G.demon_risk or G.demon_length end}
